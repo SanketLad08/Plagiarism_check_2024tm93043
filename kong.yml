@@ -1,0 +1,24 @@
+
+_format_version: "1.1"
+services:
+  - name: plagiarism-api
+    url: "http://host.docker.internal:5000"
+    routes:
+      - name: plagiarism-route
+        paths:
+          - /check
+        strip_path: false
+        methods:
+          - POST
+
+plugins:
+  - name: rate-limiting
+    service: plagiarism-api
+    config:
+      minute: 5
+      policy: local
+
+  - name: request-size-limiting
+    service: plagiarism-api
+    config:
+      allowed_payload_size: 1024
